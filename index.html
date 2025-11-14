@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Embed Viewer</title>
+    <style>
+        /* ページ全体の余白をリセットし、背景を透明にして透過させる */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex; 
+            justify-content: center; /* 水平中央揃え */
+            align-items: center; /* 垂直中央揃え */
+            background: transparent;
+        }
+
+        /* 埋め込み要素全体の設定 */
+        #randomEmbedContainer {
+            max-width: 1000px; /* PCでの最大幅 */
+            height: 750px; /* PC基準の高さ */
+            width: 100%;
+            overflow: hidden; /* スクロールを発生させない */
+            position: relative; /* ズームブロック用レイヤーの基準 */
+        }
+
+        /* ズーム・クリック操作をブロックするための透明なレイヤー */
+        .click-blocker {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10; /* <iframe>よりも前面に配置 */
+            cursor: default;
+        }
+
+        /* <iframe>自体のスタイル */
+        #randomEmbedContainer iframe {
+            border: none !important;
+            width: 100%; 
+            height: 100%;
+            display: block;
+        }
+
+        /* レスポンシブ対応 (画面幅が600px以下の場合) */
+        @media screen and (max-width: 600px) {
+            #randomEmbedContainer {
+                height: 400px; /* スマホ表示時の高さを小さく調整 */
+                width: 100%; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="randomEmbedContainer">
+  <div class="click-blocker"></div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const embeds = [
+    // <iframe>のサイズは親要素に合わせるため "100%" に設定
+    '<iframe src="https://drive.google.com/file/d/109U_XJ29YiE_h6ZCXqrKKt_S_d8GBphU/preview" width="100%" height="100%" allow="autoplay" scrolling="no" frameborder="0" style="border: none;"></iframe>',
+    '<iframe src="https://drive.google.com/file/d/1dbg4-arlgjx_k-Ho-uwf5nMHp2gn707E/preview" width="100%" height="100%" allow="autoplay" scrolling="no" frameborder="0" style="border: none;"></iframe>',
+    '<iframe src="https://drive.google.com/file/d/1cmxCbTb10Lr57KBY_bERT4ct0QE6ce8d/preview" width="100%" height="100%" allow="autoplay" scrolling="no" frameborder="0" style="border: none;"></iframe>'
+  ];
+
+  const randomIndex = Math.floor(Math.random() * embeds.length);
+  const selectedEmbed = embeds[randomIndex];
+
+  const container = document.getElementById('randomEmbedContainer');
+  const blocker = container.querySelector('.click-blocker');
+
+  // blocker の後ろに <iframe> を挿入
+  if (container && blocker) {
+    blocker.insertAdjacentHTML('afterend', selectedEmbed);
+  }
+});
+</script>
+
+</body>
+</html>

@@ -3,53 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Embed Viewer</title>
+    <title>Random Image Viewer</title>
     <style>
-        /* ページ全体の余白をリセットし、背景を透明にして透過させる */
+        /* ページ全体のリセットと背景透明化 */
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
             display: flex; 
-            justify-content: center; /* 水平中央揃え */
-            align-items: center; /* 垂直中央揃え */
+            justify-content: center;
+            align-items: center;
             background: transparent;
+            /* ズーム/スクロール操作を物理的に無効化 */
+            overflow: hidden;
+            touch-action: none; 
         }
 
-        /* 埋め込み要素全体の設定 */
+        /* 埋め込み要素全体の設定 (PCでは最大1000x750) */
         #randomEmbedContainer {
-            max-width: 1000px; /* PCでの最大幅 */
-            height: 750px; /* PC基準の高さ */
+            max-width: 1000px;
+            height: 750px;
             width: 100%;
-            overflow: hidden; /* スクロールを発生させない */
-            position: relative; /* ズームブロック用レイヤーの基準 */
+            overflow: hidden; 
+            position: relative;
         }
 
-        /* ズーム・クリック操作をブロックするための透明なレイヤー */
-        .click-blocker {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10; /* <iframe>よりも前面に配置 */
-            cursor: default;
-        }
-
-        /* <iframe>自体のスタイル */
-        #randomEmbedContainer iframe {
-            border: none !important;
+        /* 画像要素のスタイル */
+        #randomEmbedContainer img {
+            display: block;
             width: 100%; 
             height: 100%;
-            display: block;
+            object-fit: contain; /* アスペクト比を保ちつつコンテナに収める */
+            pointer-events: none; /* マウス操作を完全にブロック */
+            user-select: none; /* テキスト選択を無効化 */
         }
 
         /* レスポンシブ対応 (画面幅が600px以下の場合) */
         @media screen and (max-width: 600px) {
             #randomEmbedContainer {
-                height: 400px; /* スマホ表示時の高さを小さく調整 */
-                width: 100%; 
+                height: 400px; /* スマホ表示時の高さを調整 */
             }
         }
     </style>
@@ -57,27 +50,22 @@
 <body>
 
 <div id="randomEmbedContainer">
-  <div class="click-blocker"></div>
-</div>
+  </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const embeds = [
-    // <iframe>のサイズは親要素に合わせるため "100%" に設定
-    '<iframe src="https://drive.google.com/file/d/109U_XJ29YiE_h6ZCXqrKKt_S_d8GBphU/preview" width="100%" height="100%" allow="autoplay" scrolling="no" frameborder="0" style="border: none;"></iframe>',
-    '<iframe src="https://drive.google.com/file/d/1dbg4-arlgjx_k-Ho-uwf5nMHp2gn707E/preview" width="100%" height="100%" allow="autoplay" scrolling="no" frameborder="0" style="border: none;"></iframe>',
-    '<iframe src="https://drive.google.com/file/d/1cmxCbTb10Lr57KBY_bERT4ct0QE6ce8d/preview" width="100%" height="100%" allow="autoplay" scrolling="no" frameborder="0" style="border: none;"></iframe>'
+    '<img src="https://raw.githubusercontent.com/ogata1520320-sys/random-embed-viewer/main/cE4Ni9rOdDh76bZRvDh31763044945-1763044951.gif" alt="ランダム画像 1" />',
+    '<img src="https://raw.githubusercontent.com/ogata1520320-sys/random-embed-viewer/main/tASRWY8s8sgPgcmm4Dcc1763136121-1763136128.gif" alt="ランダム画像 2" />',
+    '<img src="https://raw.githubusercontent.com/ogata1520320-sys/random-embed-viewer/main/z8zGfgLfIiilqFrLJMhq1763136305-1763136359.gif" alt="ランダム画像 3" />'
   ];
 
   const randomIndex = Math.floor(Math.random() * embeds.length);
   const selectedEmbed = embeds[randomIndex];
 
   const container = document.getElementById('randomEmbedContainer');
-  const blocker = container.querySelector('.click-blocker');
-
-  // blocker の後ろに <iframe> を挿入
-  if (container && blocker) {
-    blocker.insertAdjacentHTML('afterend', selectedEmbed);
+  if (container) {
+    container.innerHTML = selectedEmbed;
   }
 });
 </script>
